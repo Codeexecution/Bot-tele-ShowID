@@ -34,6 +34,9 @@ bot.onText(/\/start/, (msg) => {
                     { text: 'Premium', callback_data: '/premium' }
                 ],
                 [
+                    { text: 'Donasi', url: 'https://example.com/donate' } // Ganti dengan tautan donasi Anda
+                ],
+                [
                     { text: 'Report Bug', url: 'https://t.me/+iq1HFC5X4BZhYWVl' } // Ganti dengan tautan undangan grup Anda
                 ]
             ]
@@ -59,15 +62,41 @@ bot.on('callback_query', (callbackQuery) => {
         bot.sendMessage(chatId, helpMessage, { parse_mode: 'Markdown' });
     } else if (data === '/uptime') {
         const uptime = process.uptime();
-        const uptimeMessage = `⏰ Bot telah aktif selama *${Math.floor(uptime / 60)} menit*.`;
+        const days = Math.floor(uptime / (60 * 60 * 24));
+        const hours = Math.floor((uptime % (60 * 60 * 24)) / (60 * 60));
+        const minutes = Math.floor((uptime % (60 * 60)) / 60);
+
+        const uptimeMessage = `⏰ Bot telah aktif selama:\n` +
+                              `*${days} hari, ${hours} jam, dan ${minutes} menit*.`;
         bot.sendMessage(chatId, uptimeMessage, { parse_mode: 'Markdown' });
     } else if (data === '/premium') {
-        const premiumMessage = `*Fitur Premium:*\n\n` +
-                               `💳 Akses ke fitur eksklusif\n` +
-                               `💳 Dukungan prioritas\n` +
-                               `💳 Request commands seusai konsumen!\n\n` +
-                               `📌 Untuk informasi lebih lanjut atau berlangganan, silakan ketik /start pilih button Report Bug`;
-        bot.sendMessage(chatId, premiumMessage, { parse_mode: 'Markdown' });
+        const premiumMessage = `*Note Premium*\n\n` +
+                               `🔮 Tidak menerima pesan source code ilegal\n` +
+                               `🔮 Dilarang menjual beli kan source code apa bila ketahuan garansi akan hangus\n` +
+                               `🔮 Happy enjoy to Note premium\n\n` +
+                               `📌 Untuk informasi lebih lanjut atau berlangganan, silakan pilih salah satu tombol di bawah.`;
+
+        const premiumOptions = {
+            parse_mode: 'Markdown',
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        { text: 'Berlangganan', url: 'https://example.com/subscription' }, // Ganti dengan URL berlangganan Anda
+                        { text: 'Info Detail', callback_data: '/premium_details' }
+                    ]
+                ]
+            }
+        };
+
+        bot.sendMessage(chatId, premiumMessage, premiumOptions);
+    } else if (data === '/premium_details') {
+        const premiumDetailsMessage = `*Detail Fitur Premium:*\n\n` +
+                                      `✨ Akses penuh ke semua fitur premium\n` +
+                                      `✨ Dukungan pelanggan prioritas\n` +
+                                      `✨ Update eksklusif fitur baru\n\n` +
+                                      `👉 Klik tombol *Berlangganan* untuk memulai.`;
+
+        bot.sendMessage(chatId, premiumDetailsMessage, { parse_mode: 'Markdown' });
     }
 
     bot.answerCallbackQuery(callbackQuery.id);
